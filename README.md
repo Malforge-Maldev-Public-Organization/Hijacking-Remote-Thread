@@ -1,4 +1,4 @@
-# Hijacking Remote Thread
+# Hijacking Remote Thread To Inject Code 
 
 ## Introduction
 
@@ -210,5 +210,22 @@ Functions in the code are as follows :
 
 - **FindTarget:** This function takes the name of a process and returns its PID (Process ID). It uses `CreateToolhelp32Snapshot` to capture a snapshot of current processes, and `Process32First` and `Process32Next` to retrieve the PID of the targeted process.
 
-- **FindThread:** This function works similarly to FindTarget, but instead of locating a process, it identifies a thread.
+- **FindThread:** This function works similarly to `FindTarget`, but instead of locating a process, it identifies a thread.
 
+- **InjectCTX:** This function locates the victim thread, decrypts the AES-encrypted payload, allocates memory in the remote process using `VirtualAllocEx`, and writes the payload with `WriteProcessMemory`. It then suspends the thread using `SuspendThread`, modifies its execution flow with `GetThreadContext` and `SetThreadContext`, and finally resumes it with `ResumeThread`.
+
+## Proof of Concept (PoC)
+
+Now we perform the injection into `notepad.exe` to see the technique in action : 
+
+![image](https://github.com/user-attachments/assets/a68c7bd9-de0e-4cb6-aac8-840b4ef60e0c)
+
+The MessageBox is the payload that gets executed after the injection.
+
+## Conclusions
+
+That wraps up the article, showcasing a straightforward way to inject code into a remote process by targeting an existing thread.
+
+Thank you for reading! :0
+
+**- Malforge Group.**
